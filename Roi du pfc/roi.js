@@ -9,6 +9,27 @@ let AIScore = 0;
 
 let brain;
 
+function openFileAndTrain(e){
+    let f = e.target;
+
+    var reader = new FileReader();
+        reader.onload = function(){
+            lines = reader.result.split("\r\n");
+            
+            for(let i = 0; i < lines.length; i++){
+                let move = strToMove(lines[i]);
+                brain.train(move, win(lines[i]));
+            }
+
+            console.log("Training completed!");
+
+            console.log(brain.predict([1,0,0]));
+            console.log(brain.predict([0,1,0]));
+            console.log(brain.predict([0,0,1]));
+        };
+    reader.readAsText(f.files[0]);
+}
+
 function moveToStr(move){
     switch(JSON.stringify(move)){
         case "[1,0,0]": return "Pierre";
@@ -77,7 +98,7 @@ function setup(){
     brain = new NeuralNetwork(3, 5, 3);
     createCanvas(800,400);
 
-    for (let i = 0; i < 10000; i++){
+    /*for (let i = 0; i < 100000; i++){
         lastPlayerMove = playerMove;
         playerMove = moveToStr(random(possibleMove));
 
@@ -87,6 +108,12 @@ function setup(){
             brain.train(strToMove(lastPlayerMove), win(playerMove));
         }
     }
+
+    console.log("Training completed!");
+
+    console.log(brain.predict([1,0,0]));
+    console.log(brain.predict([0,1,0]));
+    console.log(brain.predict([0,0,1]));*/
 }
 
 function keyPressed(){
